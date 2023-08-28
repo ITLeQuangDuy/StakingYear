@@ -1,25 +1,18 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-interface IERC20 {
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
-
-    function transfer(
-        address recipient,
-        uint256 amount
-    ) external returns (bool);
-
-    function balanceOf(address account) external view returns (uint256);
-}
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract Staking is Ownable {
-    //struct UserInfo{}
+    struct UserInfo {
+        uint256 amountStaked;
+        uint256 lastStakeTime;
+        uint256 rewardEarned;
+        uint256 lastRewardUpdateTime;
+        uint256 lastRewardWithdrawTime;
+    }
 
     struct PoolInfo {
         address tokenAddress;
@@ -31,47 +24,16 @@ contract Staking is Ownable {
         uint256 percent;
     }
 
-    uint256 public lockDuration = 12 * 30 days;
+    event Stake(address StakeAddress, uint256 Amount, uint256 PoolId);
+    event UnStake(address UnStakeAddress, uint256 Amount, uint256 PoolId);
+    event WithdrawReward(address WithdrawReward, uint256 Reward, uint256 PoolId);
+
     uint256 public totalPools;
 
-    mapping(address => uint256) public stakeAmount;
-
-    mapping(address => uint256) public stakeTime;
-
-    mapping(address => uint256) public rewardAmount;
-
-    mapping(address => uint256) public rewardAmount1;
-
     mapping(uint256 => PoolInfo) public pools;
-
-    mapping(address => uint256) public lastTimeUpdateReward;
-    mapping(address => mapping(uint256 => uint256)) public userStakes;
-    mapping(address => mapping(uint256 => uint256)) public lastStakeTime;
-    mapping(address => mapping(uint256 => uint256)) public unstakeTime;
-    mapping(address => mapping(uint256 => uint256)) public lastRewardClaimTime;
-
-    event Stake(address stakerAddress, uint256 amount, uint256 stakeTime); // stake
-
-    constructor(address _addressUSDT, address _addressEXM) {
-        addPool(
-            _addressUSDT,
-            31556926,
-            259200,
-            100 ether,
-            10000 ether,
-            1000000 ether,
-            65
-        );
-        addPool(
-            _addressEXM,
-            47335374,
-            604800,
-            500 ether,
-            50000 ether,
-            5000000 ether,
-            75
-        );
-    }
+    mapping(address => mapping(uint256 => UserInfo)) public userStakes;
+    mapping(uint256 => uint256) public amountMaxPool;
+    //mapping(address => mapping(uint256 => uint256)) public lastRewardWithdrawTime;
 
     function addPool(
         address _tokenAddress,
@@ -82,7 +44,9 @@ contract Staking is Ownable {
         uint256 _maxPoolAmount,
         uint256 _percent
     ) public {
+        require(_tokenAddress != address(0),"Invalid token address");
         totalPools++;
+
         pools[totalPools] = PoolInfo({
             tokenAddress: _tokenAddress,
             lockDuration: _lockDuration,
@@ -103,60 +67,124 @@ contract Staking is Ownable {
         uint256 _maxStakeAmount,
         uint256 _maxPoolAmount,
         uint256 _percent
-    ) public {
+    ) public onlyOwner {
         require(poolId <= totalPools, "Invalid pool ID");
+        require(_tokenAddress != address(0), "Invalid address");
+
         PoolInfo storage pool = pools[poolId];
-        require(pool.tokenAddress != address(0), "Invalid Pool");
 
         pool.tokenAddress = _tokenAddress;
         pool.lockDuration = _lockDuration;
+        pool.rewardDuration = _rewardDuration;
         pool.minStakeAmount = _minStakeAmount;
         pool.maxStakeAmount = _maxStakeAmount;
         pool.maxPoolAmount = _maxPoolAmount;
         pool.percent = _percent;
     }
 
+    function getRound(uint poolId) external view returns (
+        address tokenAddress,
+        uint256 lockDuration,
+        uint256 rewardDuration,
+        uint256 minStakeAmount,
+        uint256 maxStakeAmount,
+        uint256 maxPoolAmount,
+        uint256 percent
+    ){
+        require(poolId > 0 && poolId <= totalPools, "Pool does not exist");
+        PoolInfo memory pool = pools[poolId];
+        
+        return(
+            pool.tokenAddress,
+            pool.lockDuration,
+            pool.rewardDuration,
+            pool.minStakeAmount,
+            pool.maxStakeAmount,
+            pool.maxPoolAmount,
+            pool.percent
+        );
+    }
+
     function stake(uint256 poolId, uint256 amount) external {
+        address userAddress = msg.sender;
         require(poolId <= totalPools, "Invalid pool ID");
-        PoolInfo storage pool = pools[poolId];
-        require(pool.tokenAddress != address(0), "Invalid pool");
-        require(
-            amount >= pool.minStakeAmount && amount <= pool.maxStakeAmount,
-            "Invalid amount"
-        );
 
-        IERC20(pool.tokenAddress).transferFrom(
-            msg.sender,
-            address(this),
-            amount
-        );
-        userStakes[msg.sender][poolId] += amount;
-        lastStakeTime[msg.sender][poolId] = block.timestamp;
+        PoolInfo storage pool = pools[poolId];
+        UserInfo storage user = userStakes[userAddress][poolId];
+
+        require(amount >= pool.minStakeAmount, "Amount is less than minimum stake amount");
+        require(amount <= pool.maxStakeAmount, "Amount is greater than maximum stake amount");
+        require(amount + amountMaxPool[poolId] <= pool.maxPoolAmount, "Exceeds maximum pool amount");
+        
+        updateReward(poolId, userAddress);
+        
+        user.amountStaked += amount;
+        amountMaxPool[poolId] += amount;
+        user.lastStakeTime = block.timestamp;
+
+        IERC20(pool.tokenAddress).transferFrom(userAddress, address(this),amount);
+
+        emit Stake(userAddress, poolId, amount);
     }
 
-    function unstake(uint256 poolId) external {
+    function unStake(uint256 poolId) external {
         require(poolId <= totalPools, "Invalid pool ID");
-        PoolInfo storage pool = pools[poolId];
-        require(pool.tokenAddress != address(0), "Invalid pool");
-        uint256 a = userStakes[msg.sender][poolId];
-        require(amount > 0, "No stake to withdraw");
+        address userAddress = msg.sender;
+        UserInfo storage user = userStakes[userAddress][poolId];
+        updateReward(poolId, userAddress);
+        
+        require(block.timestamp >= user.lastStakeTime + pools[poolId].lockDuration, "Invalid time unstaking");
+        
+        uint256 amount = user.amountStaked + user.rewardEarned;
+        
+        user.rewardEarned = 0;
+        user.amountStaked = 0;
 
-        require(
-            block.timestamp >=
-                lastStakeTime[msg.sender][poolId] + pool.lockDuration,
-            "Stake is still locked"
-        );
-        calculateReward(poolId);
-        userStakes[msg.sender][poolId] = 0;
-        IERC20(pool.tokenAddress).transfer(msg.sender, amount);
-        unstakeTime[msg.sender][poolId] = block.timestamp;
+        IERC20(pools[poolId].tokenAddress).transfer(userAddress, amount);
+
+        emit UnStake(userAddress, amount, poolId);
     }
 
-    function calculateReward(uint256 poolId) public view returns (uint256) {
-        PoolInfo storage pool = pools[poolId];
-        uint256 duration = unstakeTime[msg.sender][poolId] - lastStakeTime[msg.sender][poolId];
-        //console.log(duration, pool.percent, userStakes[msg.sender][poolId]);
-        uint256 reward = (duration * pool.percent * userStakes[msg.sender][poolId]) / (1000 * 31556926);
-        return reward;
+    function updateReward(uint256 poolId, address _address) internal {
+        UserInfo storage user = userStakes[_address][poolId];
+        uint256 reward = calculateReward(msg.sender, poolId);
+
+        user.rewardEarned += reward;
+        user.lastRewardUpdateTime = block.timestamp;
+    }
+
+    function calculateReward(address _address ,uint256 poolId) public view returns (uint256) {
+        UserInfo storage user = userStakes[_address][poolId];
+        
+        uint256 duration = block.timestamp - user.lastRewardUpdateTime;
+        return (duration * pools[poolId].percent * user.amountStaked) / (1000 * 31556926);
+    }
+
+    function claimReward(uint256 poolId) public {
+        address userAddress = msg.sender;
+        UserInfo storage user = userStakes[userAddress][poolId];
+
+        updateReward(poolId, userAddress);
+        require(user.amountStaked > 0, "No staked amount");
+        require(user.rewardEarned > 0, "No reward available for withdrawal");
+        uint256 reward = user.rewardEarned;
+
+        if(user.lastRewardWithdrawTime == 0){
+            require(block.timestamp >= user.lastStakeTime + pools[poolId].rewardDuration, "Not enough time to withdraw 1");
+            user.rewardEarned = 0;
+            IERC20(pools[poolId].tokenAddress).transfer(userAddress, reward);
+            user.lastRewardWithdrawTime = block.timestamp;
+        }else{
+            require(block.timestamp >= user.lastRewardWithdrawTime + pools[poolId].rewardDuration, "Not enough time to withdraw 2");
+            user.rewardEarned = 0;
+            IERC20(pools[poolId].tokenAddress).transfer(userAddress, reward);
+            user.lastRewardWithdrawTime = block.timestamp;
+        }
+
+        emit WithdrawReward(userAddress, reward, poolId);
+    }
+
+    function getTimePresent() public view returns (uint256){
+        return block.timestamp;
     }
 }
