@@ -4,6 +4,7 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract Staking is Ownable {
     struct UserInfo {
@@ -27,12 +28,14 @@ contract Staking is Ownable {
     event Stake(address StakeAddress, uint256 Amount, uint256 PoolId);
     event UnStake(address UnStakeAddress, uint256 Amount, uint256 PoolId);
     event WithdrawReward(address WithdrawReward, uint256 Reward, uint256 PoolId);
+    
 
     uint256 public totalPools;
 
     mapping(uint256 => PoolInfo) public pools;
     mapping(address => mapping(uint256 => UserInfo)) public userStakes;
     mapping(uint256 => uint256) public amountMaxPool;
+    mapping (address => uint256) public balance;
     //mapping(address => mapping(uint256 => uint256)) public lastRewardWithdrawTime;
 
     function addPool(
@@ -122,7 +125,8 @@ contract Staking is Ownable {
         amountMaxPool[poolId] += amount;
         user.lastStakeTime = block.timestamp;
 
-        IERC20(pool.tokenAddress).transferFrom(userAddress, address(this),amount);
+        //IERC20(pool.tokenAddress).transferFrom(userAddress, address(this),amount);
+        SafeERC20.safeTransferFrom(IERC20(pool.tokenAddress), userAddress, address(this),amount);
 
         emit Stake(userAddress, poolId, amount);
     }
@@ -140,7 +144,8 @@ contract Staking is Ownable {
         user.rewardEarned = 0;
         user.amountStaked = 0;
 
-        IERC20(pools[poolId].tokenAddress).transfer(userAddress, amount);
+        //IERC20(pools[poolId].tokenAddress).transfer(userAddress, amount);
+        SafeERC20.safeTransfer(IERC20(pools[poolId].tokenAddress), userAddress, amount);
 
         emit UnStake(userAddress, amount, poolId);
     }
@@ -172,12 +177,14 @@ contract Staking is Ownable {
         if(user.lastRewardWithdrawTime == 0){
             require(block.timestamp >= user.lastStakeTime + pools[poolId].rewardDuration, "Not enough time to withdraw 1");
             user.rewardEarned = 0;
-            IERC20(pools[poolId].tokenAddress).transfer(userAddress, reward);
+            //IERC20(pools[poolId].tokenAddress).transfer(userAddress, reward);
+            SafeERC20.safeTransfer(IERC20(pools[poolId].tokenAddress), userAddress, reward);
             user.lastRewardWithdrawTime = block.timestamp;
         }else{
             require(block.timestamp >= user.lastRewardWithdrawTime + pools[poolId].rewardDuration, "Not enough time to withdraw 2");
             user.rewardEarned = 0;
-            IERC20(pools[poolId].tokenAddress).transfer(userAddress, reward);
+            // IERC20(pools[poolId].tokenAddress).transfer(userAddress, reward);
+            SafeERC20.safeTransfer(IERC20(pools[poolId].tokenAddress), userAddress, reward);
             user.lastRewardWithdrawTime = block.timestamp;
         }
 

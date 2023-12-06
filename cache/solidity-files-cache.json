@@ -1,8 +1,8 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\contracts\\EXMToken.sol": {
-      "lastModificationDate": 1691640592142,
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\contracts\\EXMToken.sol": {
+      "lastModificationDate": 1701856409318,
       "contentHash": "a91eee382d756f6cf7616ce84bcf7df6",
       "sourceName": "contracts/EXMToken.sol",
       "solcConfig": {
@@ -39,8 +39,8 @@
         "EXMToken"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
-      "lastModificationDate": 1691575337623,
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1701856439251,
       "contentHash": "5a20b2cad87ddb61c7a3a6af21289e28",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
@@ -76,8 +76,8 @@
         "Ownable"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol": {
-      "lastModificationDate": 1691575337207,
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\ERC20.sol": {
+      "lastModificationDate": 1701856439091,
       "contentHash": "3ae5166c6827a9cf1a7a462d1632b464",
       "sourceName": "@openzeppelin/contracts/token/ERC20/ERC20.sol",
       "solcConfig": {
@@ -115,8 +115,8 @@
         "ERC20"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
-      "lastModificationDate": 1691575337032,
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1701856439019,
       "contentHash": "5f2c5c4b6af2dd4551027144797bc8be",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
@@ -150,8 +150,43 @@
         "Context"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol": {
-      "lastModificationDate": 1691575337463,
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\IERC20.sol": {
+      "lastModificationDate": 1701856439194,
+      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC20"
+      ]
+    },
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Metadata.sol": {
+      "lastModificationDate": 1701856439196,
       "contentHash": "909ab67fc5c25033fe6cd364f8c056f9",
       "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol",
       "solcConfig": {
@@ -187,10 +222,84 @@
         "IERC20Metadata"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\IERC20.sol": {
-      "lastModificationDate": 1691575337453,
-      "contentHash": "df36f7051335cd1e748b1b6463b7fdd3",
-      "sourceName": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\utils\\SafeERC20.sol": {
+      "lastModificationDate": 1701856439267,
+      "contentHash": "1b5d667d3740d866eca0352758e59827",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "../IERC20.sol",
+        "../extensions/IERC20Permit.sol",
+        "../../../utils/Address.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SafeERC20"
+      ]
+    },
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\utils\\Address.sol": {
+      "lastModificationDate": 1701856439003,
+      "contentHash": "211ffd288c1588ba8c10eae668ca3c66",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.1"
+      ],
+      "artifacts": [
+        "Address"
+      ]
+    },
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\@openzeppelin\\contracts\\token\\ERC20\\extensions\\IERC20Permit.sol": {
+      "lastModificationDate": 1701856439197,
+      "contentHash": "aa849939a4ae83a4dcb2dca9b3e9e707",
+      "sourceName": "@openzeppelin/contracts/token/ERC20/extensions/IERC20Permit.sol",
       "solcConfig": {
         "version": "0.8.19",
         "settings": {
@@ -219,12 +328,12 @@
         "^0.8.0"
       ],
       "artifacts": [
-        "IERC20"
+        "IERC20Permit"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\contracts\\Staking.sol": {
-      "lastModificationDate": 1692896851119,
-      "contentHash": "b62abeee3a688f2d36e0c1fc3aeb8cf5",
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\contracts\\Staking.sol": {
+      "lastModificationDate": 1701860691083,
+      "contentHash": "eee535350b209a608a4fd427768e171a",
       "sourceName": "contracts/Staking.sol",
       "solcConfig": {
         "version": "0.8.19",
@@ -252,7 +361,8 @@
       "imports": [
         "hardhat/console.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC20/IERC20.sol"
+        "@openzeppelin/contracts/token/ERC20/IERC20.sol",
+        "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -261,8 +371,43 @@
         "Staking"
       ]
     },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\contracts\\USDTToken.sol": {
-      "lastModificationDate": 1691577937813,
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\node_modules\\hardhat\\console.sol": {
+      "lastModificationDate": 1701856439508,
+      "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
+      "sourceName": "hardhat/console.sol",
+      "solcConfig": {
+        "version": "0.8.19",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        ">=0.4.22 <0.9.0"
+      ],
+      "artifacts": [
+        "console"
+      ]
+    },
+    "C:\\Users\\LeQuangDy\\Desktop\\LeQuangDuy\\MyCode\\Test\\Slither\\StakingYear\\contracts\\USDTToken.sol": {
+      "lastModificationDate": 1701856409318,
       "contentHash": "56bd3d1565e713fa0e364db88ed3133c",
       "sourceName": "contracts/USDTToken.sol",
       "solcConfig": {
@@ -297,76 +442,6 @@
       ],
       "artifacts": [
         "USDTToken"
-      ]
-    },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\@openzeppelin\\contracts\\utils\\math\\SafeMath.sol": {
-      "lastModificationDate": 1691575337658,
-      "contentHash": "f6f4fda16c536e57069af40a245c985e",
-      "sourceName": "@openzeppelin/contracts/utils/math/SafeMath.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "SafeMath"
-      ]
-    },
-    "C:\\Users\\LeQuangDuy\\Desktop\\Solidity\\StakingYear\\node_modules\\hardhat\\console.sol": {
-      "lastModificationDate": 1691574729992,
-      "contentHash": "896f68942c3a20e9ae3c3c5bfd3add54",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.19",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
       ]
     }
   }
